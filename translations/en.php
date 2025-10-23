@@ -1,0 +1,108 @@
+<?php
+/**
+ * Paycell Payment Gateway English Translations
+ * 
+ * @author    Paycell <info@paycell.com.tr>
+ * @copyright 2025 Paycell
+ */
+
+global $_MODULE;
+$_MODULE = [];
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_1f46b0d27a0b4eecf1f7183d18a1e8a1'] = 'Paycell Payment Gateway';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_2e3b7c1f109cb3b38f4b5e8a0e8b8b8b'] = 'Accept payments through Paycell payment gateway.';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_3f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Are you sure you want to uninstall this payment module?';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_4f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Paycell configuration is required before using this module.';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_5f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Paycell Configuration';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_6f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'API URL';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_7f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Paycell API endpoint URL';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_8f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Merchant ID';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_9f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Your Paycell merchant identifier';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_af4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'API Key';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_bf4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Your Paycell API key';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_cf4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Secret Key';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_df4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Your Paycell secret key for signature verification';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_ef4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Test Mode';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_ff4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Enable test mode for development';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_0f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Yes';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_1f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'No';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_2f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Save';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_3f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'API URL is required.';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_4f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Merchant ID is required.';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_5f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'API Key is required.';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_6f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Settings updated';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_7f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Pay with Paycell';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_8f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Pay securely with Paycell payment gateway. You will be redirected to Paycell to complete your payment.';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_9f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Payment Information';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_af4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Your order has been paid successfully through Paycell payment gateway.';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_bf4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Order Reference:';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_cf4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Total Paid:';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_df4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'If you have any questions, please';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_ef4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'contact us';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_ff4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Paycell Payment';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_00f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'You will be redirected to Paycell to complete your payment securely.';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_01f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Order Summary';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_02f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Total:';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_03f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Currency:';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_04f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Products:';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_05f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Paycell Benefits';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_06f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Secure payment processing';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_07f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Fast and reliable';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_08f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Multiple payment methods';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_09f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = '24/7 customer support';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_0af4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Continue to Paycell';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_0bf4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Payment Successful!';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_0cf4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Order ID:';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_0df4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Payment ID:';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_0ef4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Status:';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_0ff4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Paid';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_10f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'What happens next?';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_11f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'You will receive a confirmation email shortly';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_12f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Your order will be processed and prepared for shipping';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_13f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'You can track your order status in your account';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_14f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'View My Orders';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_15f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Continue Shopping';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_16f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Payment Failed';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_17f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Unfortunately, your payment could not be processed at this time.';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_18f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'This could be due to:';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_19f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Insufficient funds';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_1af4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Card declined by your bank';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_1bf4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Network connectivity issues';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_1cf4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Invalid payment information';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_1df4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Order Information';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_1ef4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Payment Failed';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_1ff4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'What can you do?';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_20f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Try again with a different payment method';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_21f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Check with your bank if there are any restrictions';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_22f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Contact our support team for assistance';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_23f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Try Again';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_24f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Contact Support';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_25f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'An error occurred while creating your order.';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_26f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Payment initialization failed.';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_27f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'An error occurred: %s';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_28f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Installment Options';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_29f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Single Payment';
+$_MODULE['<{paycell_payment_gateway}prestashop>paycell_payment_gateway_30f4b5e8a0e8b8b8b1f46b0d27a0b4eecf'] = 'Installments';
+$_MODULE['<{paycell_payment_gateway}prestashop>Card Holder Name'] = 'Card Holder Name';
+$_MODULE['<{paycell_payment_gateway}prestashop>Full name as shown on card'] = 'Full name as shown on card';
+$_MODULE['<{paycell_payment_gateway}prestashop>Card Number'] = 'Card Number';
+$_MODULE['<{paycell_payment_gateway}prestashop>Expiry Date'] = 'Expiry Date';
+$_MODULE['<{paycell_payment_gateway}prestashop>CVV'] = 'CVV';
+$_MODULE['<{paycell_payment_gateway}prestashop>Installment Options'] = 'Installment Options';
+$_MODULE['<{paycell_payment_gateway}prestashop>Single Payment'] = 'Single Payment';
+$_MODULE['<{paycell_payment_gateway}prestashop>Processing your order...'] = 'Processing your order...';
+// Admin translations
+$_MODULE['<{paycell_payment_gateway}prestashop>Paycell Configuration'] = 'Paycell Configuration';
+$_MODULE['<{paycell_payment_gateway}prestashop>Sandbox Mode'] = 'Sandbox Mode';
+$_MODULE['<{paycell_payment_gateway}prestashop>Enable sandbox mode for testing'] = 'Enable sandbox mode for testing';
+$_MODULE['<{paycell_payment_gateway}prestashop>Application Name'] = 'Application Name';
+$_MODULE['<{paycell_payment_gateway}prestashop>Your Paycell application name'] = 'Your Paycell application name';
+$_MODULE['<{paycell_payment_gateway}prestashop>Application Password'] = 'Application Password';
+$_MODULE['<{paycell_payment_gateway}prestashop>Your Paycell application password'] = 'Your Paycell application password';
+$_MODULE['<{paycell_payment_gateway}prestashop>Secure Code'] = 'Secure Code';
+$_MODULE['<{paycell_payment_gateway}prestashop>Your Paycell secure code'] = 'Your Paycell secure code';
+$_MODULE['<{paycell_payment_gateway}prestashop>Merchant Code'] = 'Merchant Code';
+$_MODULE['<{paycell_payment_gateway}prestashop>Your Paycell merchant code'] = 'Your Paycell merchant code';
+$_MODULE['<{paycell_payment_gateway}prestashop>Application Name is required.'] = 'Application Name is required.';
+$_MODULE['<{paycell_payment_gateway}prestashop>Application Password is required.'] = 'Application Password is required.';
+$_MODULE['<{paycell_payment_gateway}prestashop>Secure Code is required.'] = 'Secure Code is required.';
+$_MODULE['<{paycell_payment_gateway}prestashop>Merchant Code is required.'] = 'Merchant Code is required.';

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en-US" target-language="en-GB" datatype="plaintext" original="Modules.Paycellpaymentgateway.Shop">
+    <header>
+      <tool tool-id="prestashop" tool-name="PrestaShop" tool-version="1.0.0"/>
+    </header>
+    <body>
+      <trans-unit id="Please fill in all required fields correctly">
+        <source>Please fill in all required fields correctly</source>
+        <target>Please fill in all required fields correctly</target>
+      </trans-unit>
+      <trans-unit id="Tokenization failed">
+        <source>Tokenization failed</source>
+        <target>Tokenization failed</target>
+      </trans-unit>
+      <trans-unit id="Payment processing failed">
+        <source>Payment processing failed</source>
+        <target>Payment processing failed</target>
+      </trans-unit>
+      <trans-unit id="Please enter the cardholder name">
+        <source>Please enter the cardholder name</source>
+        <target>Please enter the cardholder name</target>
+      </trans-unit>
+      <trans-unit id="Please enter a valid card number">
+        <source>Please enter a valid card number</source>
+        <target>Please enter a valid card number</target>
+      </trans-unit>
+      <trans-unit id="Please enter a valid expiry date (MM/YY)">
+        <source>Please enter a valid expiry date (MM/YY)</source>
+        <target>Please enter a valid expiry date (MM/YY)</target>
+      </trans-unit>
+      <trans-unit id="Card has expired. Please enter a valid expiry date">
+        <source>Card has expired. Please enter a valid expiry date</source>
+        <target>Card has expired. Please enter a valid expiry date</target>
+      </trans-unit>
+      <trans-unit id="Please enter a valid CVV">
+        <source>Please enter a valid CVV</source>
+        <target>Please enter a valid CVV</target>
+      </trans-unit>
+      <trans-unit id="Failed to generate hash">
+        <source>Failed to generate hash</source>
+        <target>Failed to generate hash</target>
+      </trans-unit>
+      <trans-unit id="Single Payment">
+        <source>Single Payment</source>
+        <target>Single Payment</target>
+      </trans-unit>
+      <trans-unit id="Installments">
+        <source>Installments</source>
+        <target>Installments</target>
+      </trans-unit>
+      <trans-unit id="Card Holder Name">
+        <source>Card Holder Name</source>
+        <target>Card Holder Name</target>
+      </trans-unit>
+      <trans-unit id="Full name as shown on card">
+        <source>Full name as shown on card</source>
+        <target>Full name as shown on card</target>
+      </trans-unit>
+      <trans-unit id="Card Number">
+        <source>Card Number</source>
+        <target>Card Number</target>
+      </trans-unit>
+      <trans-unit id="Expiry Date">
+        <source>Expiry Date</source>
+        <target>Expiry Date</target>
+      </trans-unit>
+      <trans-unit id="CVV">
+        <source>CVV</source>
+        <target>CVV</target>
+      </trans-unit>
+      <trans-unit id="Installment Options">
+        <source>Installment Options</source>
+        <target>Installment Options</target>
+      </trans-unit>
+      <trans-unit id="Processing your order...">
+        <source>Processing your order...</source>
+        <target>Processing your order...</target>
+      </trans-unit>
+      <trans-unit id="Pay with Paycell">
+        <source>Pay with Paycell</source>
+        <target>Pay with Paycell</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en-US" target-language="tr-TR" datatype="plaintext" original="Modules.Paycellpaymentgateway.Admin">
+    <header>
+      <tool tool-id="prestashop" tool-name="PrestaShop" tool-version="1.0.0"/>
+    </header>
+    <body>
+      <trans-unit id="Paycell Configuration">
+        <source>Paycell Configuration</source>
+        <target>Paycell Yapılandırması</target>
+      </trans-unit>
+      <trans-unit id="Sandbox Mode">
+        <source>Sandbox Mode</source>
+        <target>Test Modu</target>
+      </trans-unit>
+      <trans-unit id="Enable sandbox mode for testing">
+        <source>Enable sandbox mode for testing</source>
+        <target>Test için test modunu etkinleştir</target>
+      </trans-unit>
+      <trans-unit id="Application Name">
+        <source>Application Name</source>
+        <target>Uygulama Adı</target>
+      </trans-unit>
+      <trans-unit id="Your Paycell application name">
+        <source>Your Paycell application name</source>
+        <target>Paycell uygulama adınız</target>
+      </trans-unit>
+      <trans-unit id="Application Password">
+        <source>Application Password</source>
+        <target>Uygulama Şifresi</target>
+      </trans-unit>
+      <trans-unit id="Your Paycell application password">
+        <source>Your Paycell application password</source>
+        <target>Paycell uygulama şifreniz</target>
+      </trans-unit>
+      <trans-unit id="Secure Code">
+        <source>Secure Code</source>
+        <target>Güvenlik Kodu</target>
+      </trans-unit>
+      <trans-unit id="Your Paycell secure code">
+        <source>Your Paycell secure code</source>
+        <target>Paycell güvenlik kodunuz</target>
+      </trans-unit>
+      <trans-unit id="Merchant Code">
+        <source>Merchant Code</source>
+        <target>Satıcı Kodu</target>
+      </trans-unit>
+      <trans-unit id="Your Paycell merchant code">
+        <source>Your Paycell merchant code</source>
+        <target>Paycell satıcı kodunuz</target>
+      </trans-unit>
+      <trans-unit id="Application Name is required.">
+        <source>Application Name is required.</source>
+        <target>Uygulama Adı gereklidir.</target>
+      </trans-unit>
+      <trans-unit id="Application Password is required.">
+        <source>Application Password is required.</source>
+        <target>Uygulama Şifresi gereklidir.</target>
+      </trans-unit>
+      <trans-unit id="Secure Code is required.">
+        <source>Secure Code is required.</source>
+        <target>Güvenlik Kodu gereklidir.</target>
+      </trans-unit>
+      <trans-unit id="Merchant Code is required.">
+        <source>Merchant Code is required.</source>
+        <target>Satıcı Kodu gereklidir.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
