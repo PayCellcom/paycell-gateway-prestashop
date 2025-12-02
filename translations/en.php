@@ -90,7 +90,6 @@ $_MODULE['<{paycell_payment_gateway}prestashop>CVV'] = 'CVV';
 $_MODULE['<{paycell_payment_gateway}prestashop>Installment Options'] = 'Installment Options';
 $_MODULE['<{paycell_payment_gateway}prestashop>Single Payment'] = 'Single Payment';
 $_MODULE['<{paycell_payment_gateway}prestashop>Processing your order...'] = 'Processing your order...';
-// Admin translations
 $_MODULE['<{paycell_payment_gateway}prestashop>Paycell Configuration'] = 'Paycell Configuration';
 $_MODULE['<{paycell_payment_gateway}prestashop>Sandbox Mode'] = 'Sandbox Mode';
 $_MODULE['<{paycell_payment_gateway}prestashop>Enable sandbox mode for testing'] = 'Enable sandbox mode for testing';

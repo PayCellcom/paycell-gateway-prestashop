@@ -14,7 +14,6 @@ class Paycell_Payment_GatewayValidationModuleFrontController extends ModuleFront
     {
         parent::initContent();
         $input = json_decode(file_get_contents('php://input'), true);
-        // Handle hash generation request
         if (isset($input['action']) && $input['action'] === 'generate_hash') {
             $this->generateHash($input['transaction_id'], $input['transaction_time']);
             return;
@@ -56,6 +55,12 @@ class Paycell_Payment_GatewayValidationModuleFrontController extends ModuleFront
             return;
         }
 
+        $token = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? null;
+        if (!$token || $token != Tools::getToken(false)) {
+            $this->sendJsonResponse(false, 'Invalid CSRF token');
+            return;
+        }
+
         try {
             require_once $this->module->getLocalPath() . 'classes/PaycellGateway.php';
             $gateway = new PaycellGateway($this->module->getApiConfig());
@@ -87,15 +92,21 @@ class Paycell_Payment_GatewayValidationModuleFrontController extends ModuleFront
             return;
         }
 
-        $cardToken = $input['card_token'];
-        if (empty($cardToken)) {
-            $this->errors[] = $this->trans('Card token is required.', [], 'Modules.Paycellpaymentgateway.Shop');
-            return;
-        }
         require_once $this->module->getLocalPath() . 'classes/PaycellGateway.php';
         $gateway = new PaycellGateway($this->module->getApiConfig());
+        
+        $cardId = $input['card_id'] ?? null;
+        $cardToken = $input['card_token'] ?? null;
+        $saveCard = (bool)($input['save_card'] ?? false);
+        
+        if (empty($cardId) && empty($cardToken)) {
+            $this->errors[] = $this->trans('Card token or card ID is required.', [], 'Modules.Paycellpaymentgateway.Shop');
+            return;
+        }
+        
         $sessionData = [
             'cardToken' => $cardToken,
+            'cardId' => $cardId,
             'orderId' => $cart->id,
             'amount' => round(round((float)$cart->getOrderTotal(true, Cart::BOTH), 2) * 100, 0),
             'installmentCount' => (int)($input['installmentCount'] ?? 1),
@@ -108,6 +119,7 @@ class Paycell_Payment_GatewayValidationModuleFrontController extends ModuleFront
             'clientIPAddress' => $this->getClientIPAddress(),
             'merchantCode' => $gateway->getMerchantCode(),
             'applicationName' => $gateway->getApplicationName(),
+            'saveCard' => $saveCard,
         ];
 
         $transactionHash = $gateway->generateHashData($sessionData['transactionId'], $sessionData['transactionDateTime']);
@@ -120,7 +132,7 @@ class Paycell_Payment_GatewayValidationModuleFrontController extends ModuleFront
 
         if ($response && isset($response['responseHeader']['responseCode']) && $response['responseHeader']['responseCode'] == '0') {
             $threeDSessionId = $response['threeDSessionId'] ?? null;
-            $sandboxMode = true;
+            $sandboxMode = $gateway->getSandboxMode();
             if ($sandboxMode) {
                 $threeDSecureUrl = 'https://omccstb.turkcell.com.tr/paymentmanagement/rest/threeDSecure';
             } else {
@@ -156,7 +168,7 @@ class Paycell_Payment_GatewayValidationModuleFrontController extends ModuleFront
         header('Content-Type: application/json');
         echo json_encode([
             'success' => $success,
-            'message' => $message,
+            'message' => Tools::safeOutput((string) $message),
             'data' => $data
         ]);
         exit;

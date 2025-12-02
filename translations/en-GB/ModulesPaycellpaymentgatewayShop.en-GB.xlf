@@ -81,6 +81,102 @@
         <source>Pay with Paycell</source>
         <target>Pay with Paycell</target>
       </trans-unit>
+      <trans-unit id="Saved Cards">
+        <source>Saved Cards</source>
+        <target>Saved Cards</target>
+      </trans-unit>
+      <trans-unit id="Use Saved Card">
+        <source>Use Saved Card</source>
+        <target>Use Saved Card</target>
+      </trans-unit>
+      <trans-unit id="Use New Card">
+        <source>Use New Card</source>
+        <target>Use New Card</target>
+      </trans-unit>
+      <trans-unit id="You can use the credit cards that are saved in Paycell to pay for your order">
+        <source>You can use the credit cards that are saved in Paycell to pay for your order</source>
+        <target>You can use the credit cards that are saved in Paycell to pay for your order</target>
+      </trans-unit>
+      <trans-unit id="To use your cards that are saved in Paycell you must validate your phone number via OTP">
+        <source>To use your cards that are saved in Paycell you must validate your phone number via OTP</source>
+        <target>To use your cards that are saved in Paycell you must validate your phone number via OTP</target>
+      </trans-unit>
+      <trans-unit id="Send OTP Code">
+        <source>Send OTP Code</source>
+        <target>Send OTP Code</target>
+      </trans-unit>
+      <trans-unit id="Enter OTP Code">
+        <source>Enter OTP Code</source>
+        <target>Enter OTP Code</target>
+      </trans-unit>
+      <trans-unit id="Enter OTP code">
+        <source>Enter OTP code</source>
+        <target>Enter OTP code</target>
+      </trans-unit>
+      <trans-unit id="Resend OTP Code">
+        <source>Resend OTP Code</source>
+        <target>Resend OTP Code</target>
+      </trans-unit>
+      <trans-unit id="Verify OTP Code">
+        <source>Verify OTP Code</source>
+        <target>Verify OTP Code</target>
+      </trans-unit>
+      <trans-unit id="Phone number validated successfully!">
+        <source>Phone number validated successfully!</source>
+        <target>Phone number validated successfully!</target>
+      </trans-unit>
+      <trans-unit id="Sending OTP...">
+        <source>Sending OTP...</source>
+        <target>Sending OTP...</target>
+      </trans-unit>
+      <trans-unit id="Failed to send OTP code. Please try again.">
+        <source>Failed to send OTP code. Please try again.</source>
+        <target>Failed to send OTP code. Please try again.</target>
+      </trans-unit>
+      <trans-unit id="Validating...">
+        <source>Validating...</source>
+        <target>Validating...</target>
+      </trans-unit>
+      <trans-unit id="Invalid OTP code. Please try again.">
+        <source>Invalid OTP code. Please try again.</source>
+        <target>Invalid OTP code. Please try again.</target>
+      </trans-unit>
+      <trans-unit id="Failed to validate OTP. Please try again.">
+        <source>Failed to validate OTP. Please try again.</source>
+        <target>Failed to validate OTP. Please try again.</target>
+      </trans-unit>
+      <trans-unit id="Please enter the OTP code.">
+        <source>Please enter the OTP code.</source>
+        <target>Please enter the OTP code.</target>
+      </trans-unit>
+      <trans-unit id="Processing...">
+        <source>Processing...</source>
+        <target>Processing...</target>
+      </trans-unit>
+      <trans-unit id="OTP code has been sent to your phone number.">
+        <source>OTP code has been sent to your phone number.</source>
+        <target>OTP code has been sent to your phone number.</target>
+      </trans-unit>
+      <trans-unit id="Maximum retry attempts reached.">
+        <source>Maximum retry attempts reached.</source>
+        <target>Maximum retry attempts reached.</target>
+      </trans-unit>
+      <trans-unit id="Remaining attempts:">
+        <source>Remaining attempts:</source>
+        <target>Remaining attempts:</target>
+      </trans-unit>
+      <trans-unit id="Failed to load saved cards">
+        <source>Failed to load saved cards</source>
+        <target>Failed to load saved cards</target>
+      </trans-unit>
+      <trans-unit id="Network error:">
+        <source>Network error:</source>
+        <target>Network error:</target>
+      </trans-unit>
+      <trans-unit id="OTP verified but no cards received">
+        <source>OTP verified but no cards received</source>
+        <target>OTP verified but no cards received</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

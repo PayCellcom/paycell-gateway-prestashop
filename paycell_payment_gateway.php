@@ -38,7 +38,7 @@ class Paycell_Payment_Gateway extends PaymentModule
         $this->version = '1.0.0';
         $this->need_instance = 1;
         $this->ps_versions_compliancy = ['min' => '1.7.6.0', 'max' => _PS_VERSION_];
-        $this->controllers = ['validation', 'callback', 'bininfo'];
+        $this->controllers = ['validation', 'callback', 'bininfo', 'savedcards'];
         $this->currencies = true;
         $this->currencies_mode = 'checkbox';
 
@@ -277,7 +277,6 @@ class Paycell_Payment_Gateway extends PaymentModule
 
     private function generateEmbeddedForm()
     {
-        // Prepare JavaScript translations
         $jsTranslations = [
             'fillRequiredFields' => $this->trans('Please fill in all required fields correctly', [], 'Modules.Paycellpaymentgateway.Shop'),
             'tokenizationFailed' => $this->trans('Tokenization failed', [], 'Modules.Paycellpaymentgateway.Shop'),
@@ -290,7 +289,6 @@ class Paycell_Payment_Gateway extends PaymentModule
             'hashGenerationFailed' => $this->trans('Failed to generate hash', [], 'Modules.Paycellpaymentgateway.Shop'),
             'singlePayment' => $this->trans('Single Payment', [], 'Modules.Paycellpaymentgateway.Shop'),
             'installments' => $this->trans('Installments', [], 'Modules.Paycellpaymentgateway.Shop'),
-            // Template translations
             'cardHolderName' => $this->trans('Card Holder Name', [], 'Modules.Paycellpaymentgateway.Shop'),
             'fullNameOnCard' => $this->trans('Full name as shown on card', [], 'Modules.Paycellpaymentgateway.Shop'),
             'cardNumber' => $this->trans('Card Number', [], 'Modules.Paycellpaymentgateway.Shop'),
@@ -298,11 +296,40 @@ class Paycell_Payment_Gateway extends PaymentModule
             'cvv' => $this->trans('CVV', [], 'Modules.Paycellpaymentgateway.Shop'),
             'installmentOptions' => $this->trans('Installment Options', [], 'Modules.Paycellpaymentgateway.Shop'),
             'processingOrder' => $this->trans('Processing your order...', [], 'Modules.Paycellpaymentgateway.Shop'),
+            'savedCards' => $this->trans('Saved Cards', [], 'Modules.Paycellpaymentgateway.Shop'),
+            'useSavedCard' => $this->trans('Use Saved Card', [], 'Modules.Paycellpaymentgateway.Shop'),
+            'useNewCard' => $this->trans('Use New Card', [], 'Modules.Paycellpaymentgateway.Shop'),
+            'otpRequired' => $this->trans('You can use the credit cards that are saved in Paycell to pay for your order', [], 'Modules.Paycellpaymentgateway.Shop'),
+            'otpMessageFull' => $this->trans('To use your cards that are saved in Paycell you must validate your phone number via OTP', [], 'Modules.Paycellpaymentgateway.Shop'),
+            'sendOtp' => $this->trans('Send OTP Code', [], 'Modules.Paycellpaymentgateway.Shop'),
+            'enterOtp' => $this->trans('Enter OTP Code', [], 'Modules.Paycellpaymentgateway.Shop'),
+            'otpPlaceholder' => $this->trans('Enter OTP code', [], 'Modules.Paycellpaymentgateway.Shop'),
+            'resendOtp' => $this->trans('Resend OTP Code', [], 'Modules.Paycellpaymentgateway.Shop'),
+            'verifyOtp' => $this->trans('Verify OTP Code', [], 'Modules.Paycellpaymentgateway.Shop'),
+            'otpVerifiedSuccess' => $this->trans('Phone number validated successfully!', [], 'Modules.Paycellpaymentgateway.Shop'),
+            'sendingOtp' => $this->trans('Sending OTP...', [], 'Modules.Paycellpaymentgateway.Shop'),
+            'failedSendOtp' => $this->trans('Failed to send OTP code. Please try again.', [], 'Modules.Paycellpaymentgateway.Shop'),
+            'verifyingOtp' => $this->trans('Validating...', [], 'Modules.Paycellpaymentgateway.Shop'),
+            'invalidOtp' => $this->trans('Invalid OTP code. Please try again.', [], 'Modules.Paycellpaymentgateway.Shop'),
+            'failedValidateOtp' => $this->trans('Failed to validate OTP. Please try again.', [], 'Modules.Paycellpaymentgateway.Shop'),
+            'otpRequiredMessage' => $this->trans('Please enter the OTP code.', [], 'Modules.Paycellpaymentgateway.Shop'),
+            'processing' => $this->trans('Processing...', [], 'Modules.Paycellpaymentgateway.Shop'),
+            'otpSentSuccess' => $this->trans('OTP code has been sent to your phone number.', [], 'Modules.Paycellpaymentgateway.Shop'),
+            'maxRetryAttemptsReached' => $this->trans('Maximum retry attempts reached.', [], 'Modules.Paycellpaymentgateway.Shop'),
+            'remainingAttempts' => $this->trans('Remaining attempts:', [], 'Modules.Paycellpaymentgateway.Shop'),
+            'failedLoadCards' => $this->trans('Failed to load saved cards', [], 'Modules.Paycellpaymentgateway.Shop'),
+            'networkError' => $this->trans('Network error:', [], 'Modules.Paycellpaymentgateway.Shop'),
+            'otpVerifiedNoCards' => $this->trans('OTP verified but no cards received', [], 'Modules.Paycellpaymentgateway.Shop'),
         ];
+
+        $sandboxMode = $this->getConfigFieldsValues()[self::CONFIG_SANDBOX_MODE] == '1';
 
         $this->context->smarty->assign([
             'action' => $this->context->link->getModuleLink($this->name, 'validation', ['option' => 'embedded'], true),
             'js_translations' => $jsTranslations,
+            'is_logged' => $this->context->customer->isLogged(),
+            'get_cards_url' => $this->context->link->getModuleLink($this->name, 'savedcards', [], true),
+            'card_token_url' => $sandboxMode ? 'https://omccstb.turkcell.com.tr/paymentmanagement/rest/getCardTokenSecure' : 'https://epayment.turkcell.com.tr/paymentmanagement/rest/getCardTokenSecure',
         ]);
         try {
             return $this->context->smarty->fetch('module:paycell_payment_gateway/views/templates/front/paymentOptionEmbeddedForm.tpl');

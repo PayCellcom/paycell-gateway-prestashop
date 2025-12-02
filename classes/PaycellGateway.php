@@ -64,7 +64,7 @@ class PaycellGateway
             'msisdn' => $sessionData['msisdn'],
             'amount' => $sessionData['amount'],
             'installmentCount' => (int)$sessionData['installmentCount'],
-            'cardToken' => $sessionData['cardToken'],
+            'cardToken' => $sessionData['cardToken'] ?? null,
             'cardId' => $sessionData['cardId'] ?? null,
             'transactionType' => $sessionData['transactionType'],
             'target' => $sessionData['target'],
@@ -76,6 +76,10 @@ class PaycellGateway
                 'applicationPwd' => $this->getApplicationPassword()
             ]
         ];
+        
+        if (isset($sessionData['saveCard']) && $sessionData['saveCard'] && !empty($sessionData['cardToken'])) {
+            $requestData['saveCard'] = true;
+        }
         
         return $this->makeRequest('/api/3d/session', $requestData);
     }
@@ -161,6 +165,98 @@ class PaycellGateway
         
         return $this->makeRequest('/api/cards/bin-info', $requestData);
     }
+
+    /**
+     * Get saved cards for a customer from Paycell API
+     *
+     * @param array $sessionData
+     * @return array
+     */
+    public function getSavedCards($sessionData)
+    {
+        $requestData = [
+            'requestHeader' => [
+                'transactionId' => $sessionData['transactionId'],
+                'transactionDateTime' => $sessionData['transactionDateTime'],
+                'clientIPAddress' => $sessionData['clientIPAddress'] ?? '127.0.0.1',
+                'applicationName' => $this->getApplicationName(),
+                'applicationPwd' => $this->getApplicationPassword()
+            ],
+            'msisdn' => $sessionData['msisdn'],
+            'merchantCode' => $this->getMerchantCode(),
+        ];
+        
+        if (isset($sessionData['referenceNumber'])) {
+            $requestData['referenceNumber'] = $sessionData['referenceNumber'];
+        }
+        
+        if (isset($sessionData['otpToken'])) {
+            $requestData['otpToken'] = $sessionData['otpToken'];
+        }
+        
+        return $this->makeRequest('/api/cards/payment-methods', $requestData);
+    }
+
+    /**
+     * Send OTP to customer's phone number
+     *
+     * @param array $sessionData
+     * @return array
+     */
+    public function sendOtp($sessionData)
+    {
+        $requestData = [
+            'requestHeader' => [
+                'transactionId' => $sessionData['transactionId'],
+                'transactionDateTime' => $sessionData['transactionDateTime'],
+                'clientIPAddress' => $sessionData['clientIPAddress'] ?? '127.0.0.1',
+                'applicationName' => $this->getApplicationName(),
+                'applicationPwd' => $this->getApplicationPassword()
+            ],
+            'msisdn' => $sessionData['msisdn'],
+            'merchantCode' => $this->getMerchantCode(),
+        ];
+        
+        if (isset($sessionData['referenceNumber'])) {
+            $requestData['referenceNumber'] = $sessionData['referenceNumber'];
+        }
+        
+        return $this->makeRequest('/api/otp/send', $requestData);
+    }
+
+    /**
+     * Verify OTP code and get OTP token
+     *
+     * @param array $sessionData
+     * @return array
+     */
+    public function verifyOtp($sessionData)
+    {
+        $requestData = [
+            'requestHeader' => [
+                'transactionId' => $sessionData['transactionId'],
+                'transactionDateTime' => $sessionData['transactionDateTime'],
+                'clientIPAddress' => $sessionData['clientIPAddress'] ?? '127.0.0.1',
+                'applicationName' => $this->getApplicationName(),
+                'applicationPwd' => $this->getApplicationPassword()
+            ],
+            'referenceNumber' => $sessionData['referenceNumber'],
+            'msisdn' => $sessionData['msisdn'],
+            'otp' => $sessionData['otpCode'],
+            'token' => $sessionData['otpToken']
+        ];
+        
+        if (isset($sessionData['referenceNumber'])) {
+            $requestData['referenceNumber'] = $sessionData['referenceNumber'];
+        }
+        
+        return $this->makeRequest('/api/otp/validate', $requestData);
+    }
+
+    public function getSandboxMode() {
+        return $this->sandboxMode;
+    }
+
 
     private function getBaseUrl()
     {

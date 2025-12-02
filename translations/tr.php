@@ -106,7 +106,6 @@ $_MODULE['<{paycell_payment_gateway}prestashop>CVV'] = 'CVV';
 $_MODULE['<{paycell_payment_gateway}prestashop>Installment Options'] = 'Taksit Seçenekleri';
 $_MODULE['<{paycell_payment_gateway}prestashop>Single Payment'] = 'Tek Çekim';
 $_MODULE['<{paycell_payment_gateway}prestashop>Processing your order...'] = 'Siparişiniz işleniyor...';
-// Admin translations
 $_MODULE['<{paycell_payment_gateway}prestashop>Paycell Configuration'] = 'Paycell Yapılandırması';
 $_MODULE['<{paycell_payment_gateway}prestashop>Sandbox Mode'] = 'Test Modu';
 $_MODULE['<{paycell_payment_gateway}prestashop>Enable sandbox mode for testing'] = 'Test için test modunu etkinleştir';

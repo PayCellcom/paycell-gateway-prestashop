@@ -14,10 +14,15 @@ class Paycell_Payment_GatewayBininfoModuleFrontController extends ModuleFrontCon
     {
         parent::initContent();
         
-        // Check if this is an AJAX request
         if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || 
             strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest') {
             $this->sendJsonResponse(false, 'Invalid request');
+            return;
+        }
+
+        $token = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? null;
+        if (!$token || $token != Tools::getToken(false)) {
+            $this->sendJsonResponse(false, 'Invalid CSRF token');
             return;
         }
 
@@ -88,7 +93,7 @@ class Paycell_Payment_GatewayBininfoModuleFrontController extends ModuleFrontCon
         header('Content-Type: application/json');
         echo json_encode([
             'success' => $success,
-            'message' => $message,
+            'message' => Tools::safeOutput((string) $message),
             'data' => $data
         ]);
         exit;

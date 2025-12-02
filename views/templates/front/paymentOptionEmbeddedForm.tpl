@@ -8,7 +8,68 @@
 <form id="js-paycell-payment-form">
   <input type="hidden" name="option" value="embedded">
   <input type="hidden" name="card_token" id="card_token" value="">
+  <input type="hidden" name="card_id" id="card_id" value="">
+  <input type="hidden" name="save_card" id="save_card" value="0">
 
+  {if $is_logged}
+  <!-- Payment Option Tabs -->
+  <div class="payment-option-tabs" id="payment-option-tabs" style="display: none;">
+    <div class="payment-option-tab" data-tab="saved-cards">
+      {$js_translations.savedCards|default:'Saved Cards'}
+    </div>
+    <div class="payment-option-tab active" data-tab="new-card">
+      {$js_translations.useNewCard|default:'New Card'}
+    </div>
+  </div>
+
+  <!-- Saved Cards Content -->
+  <div class="payment-option-content" id="saved-cards-content">
+    <div class="saved-cards-section">
+      <div id="cards-loading" style="display: none; text-align: center; padding: 20px;">
+        <div class="paycell-spinner"></div>
+        <p>Loading saved cards...</p>
+      </div>
+      <div id="cards-error" style="display: none; color: #dc3545; padding: 10px; background: #f8d7da; border-radius: 4px; margin-bottom: 10px;"></div>
+      <div class="saved-cards-list" id="saved-cards-list" style="display: none;">
+        <div class="cards-container" id="cards-container"></div>
+      </div>
+    </div>
+  </div>
+  {/if}
+
+  <!-- New Card Content -->
+  <div class="payment-option-content active" id="new-card-content">
+  <!-- OTP Verification Section (matching OpenCart) -->
+  <div class="otp-section" id="otp-section" style="display: none;">
+    <button type="button" id="btn-toggle-otp" class="otp-toggle-button">
+      <span id="otp-toggle-text">{$js_translations.otpRequired|default:'You can use the credit cards that are saved in Paycell to pay for your order'}</span>
+      <span id="otp-toggle-icon" class="otp-toggle-icon">▼</span>
+    </button>
+    <div id="otp-expanded-content" class="otp-expanded-content" style="display: none;">
+      <p style="margin: 0 0 15px 0;">{$js_translations.otpMessageFull|default:'To use your cards that are saved in Paycell you must validate your phone number via OTP'}</p>
+      
+      <div id="otp-send-section" class="otp-send-section">
+        <button type="button" id="btn-send-otp" class="btn-otp-send">{$js_translations.sendOtp|default:'Send OTP Code'}</button>
+      </div>
+      
+      <div id="otp-verify-section" class="otp-verify-section" style="display: none;">
+        <label for="otp-code" class="otp-code-label">{$js_translations.enterOtp|default:'Enter OTP Code'}</label>
+          <input type="text" id="otp-code" class="otp-code-input" placeholder="{$js_translations.otpPlaceholder|default:'Enter OTP code'}" maxlength="6" pattern="[0-9]*" autocomplete="one-time-code">
+          <div id="otp-message" class="otp-message"></div>
+          <button type="button" id="btn-resend-otp" class="btn-otp-resend" style="display: none;">{$js_translations.resendOtp|default:'Resend OTP Code'}</button>
+          <button type="button" id="btn-verify-otp" class="btn-otp-verify">{$js_translations.verifyOtp|default:'Verify OTP Code'}</button>
+      </div>
+      
+      <div id="otp-success-message" class="otp-success-message" style="display: none;">
+        {$js_translations.otpVerifiedSuccess|default:'Phone number validated successfully!'}
+      </div>
+      
+      <div id="otp-loading" class="otp-loading" style="display: none; text-align: center; padding: 10px;">
+        <div class="paycell-spinner" style="margin: 0 auto;"></div>
+        <span style="display: block; margin-top: 5px;">{$js_translations.processing|default:'Processing...'}</span>
+      </div>
+    </div>
+  </div>
   <div class="form-group">
     <label class="form-control-label" for="cardHolder">{$js_translations.cardHolderName|default:'Card Holder Name'}</label>
     <input type="text" name="cardHolder" id="cardHolder" class="form-control" placeholder="{$js_translations.fullNameOnCard|default:'Full name as shown on card'}" autocomplete="cc-name" required>
@@ -31,7 +92,16 @@
     </div>
   </div>
 
-  <!-- Installment Options -->
+<!-- 
+  {if $is_logged}
+  <div class="form-group">
+    <div class="form-check">
+      <input type="checkbox" name="saveCardCheckbox" id="saveCardCheckbox" style="margin-right: 5px;">
+      <label for="saveCardCheckbox" style="font-weight: normal; margin-left: 5px;">{$js_translations.saveCard|default:'Save this card for future purchases'}</label>
+    </div>
+  </div>
+  {/if} -->
+  </div>
   <div class="form-group" id="installment-group" style="display: none;">
     <label class="form-control-label" for="installmentCount">{$js_translations.installmentOptions|default:'Installment Options'}</label>
     <select name="installmentCount" id="installmentCount" class="form-control">
@@ -194,10 +264,321 @@
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
 }
+
+/* Payment Option Tabs */
+.payment-option-tabs {
+  display: flex;
+  border-bottom: 2px solid #e0e0e0;
+  margin-bottom: 20px;
+}
+
+.payment-option-tab {
+  flex: 1;
+  padding: 12px 20px;
+  text-align: center;
+  cursor: pointer;
+  background: #f5f5f5;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+  transition: all 0.3s ease;
+}
+
+.payment-option-tab:hover {
+  background: #e9e9e9;
+  color: #333;
+}
+
+.payment-option-tab.active {
+  background: #fff;
+  color: #0073aa;
+  border-bottom-color: #0073aa;
+  font-weight: 600;
+}
+
+.payment-option-content {
+  display: none;
+}
+
+.payment-option-content.active {
+  display: block;
+}
+
+/* Saved Cards Section */
+.saved-cards-section {
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+@media (max-width: 600px) {
+  .cards-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.saved-card-item {
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: linear-gradient(to right top, #033e8c, #4cc8d9);
+  color: white;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1.986;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.saved-card-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.saved-card-item.selected {
+  border: 2px solid #0073aa;
+  box-shadow: 0 4px 12px rgba(0, 115, 170, 0.3);
+  transform: translateY(-2px);
+}
+
+.saved-card-item .card-checkmark {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #0073aa;
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.saved-card-item .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 20px;
+  background: none;
+  border: none;
+}
+
+.saved-card-item .card-brand {
+  font-size: 12px;
+  text-transform: uppercase;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.saved-card-item .card-type {
+  font-size: 12px;
+  text-transform: uppercase;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.saved-card-item .card-number {
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  color: white;
+  display: block;
+  margin-top: 10px;
+}
+
+/* OTP Section Styles (matching OpenCart exactly) */
+.otp-section {
+  display: none;
+  margin-bottom: 20px;
+  border: 1px solid #b8daff;
+  border-radius: 4px;
+  background-color: #cce5ff;
+}
+
+.otp-section.active {
+  display: block;
+}
+
+.otp-toggle-button {
+  width: 100%;
+  padding: 12px 15px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #004085;
+}
+
+.otp-toggle-icon {
+  font-size: 18px;
+  transition: transform 0.3s ease;
+}
+
+.otp-expanded-content {
+  display: none;
+  padding: 0 15px 15px 15px;
+  font-size: 14px;
+  color: #004085;
+  border-top: 1px solid #b8daff;
+  padding-top: 15px;
+}
+
+.otp-expanded-content.active {
+  display: block;
+}
+
+.otp-send-section {
+  margin-bottom: 10px;
+}
+
+.btn-otp-send {
+  padding: 10px 20px;
+  background-color: #0073aa;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  width: 100%;
+  margin-bottom: 10px;
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+.btn-otp-send:hover {
+  background-color: #005a87;
+}
+
+.btn-otp-send:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.otp-verify-section {
+  display: none;
+}
+
+.otp-verify-section.active {
+  display: block;
+}
+
+.otp-code-label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.otp-code-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+.otp-message {
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+
+.btn-otp-verify {
+  padding: 10px 20px;
+  background-color: #0073aa;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  width: 100%;
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+.btn-otp-verify:hover {
+  background-color: #005a87;
+}
+
+.btn-otp-verify:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-otp-resend {
+  padding: 8px 16px;
+  background-color: transparent;
+  color: #0073aa;
+  border: 1px solid #0073aa;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  width: 100%;
+  margin-bottom: 10px;
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+.btn-otp-resend:hover {
+  background-color: #f0f7ff;
+}
+
+.btn-otp-resend:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.otp-success-message {
+  display: none;
+  color: #28a745;
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 10px;
+}
+
+.otp-success-message.active {
+  display: block;
+}
+
+.otp-loading {
+  text-align: center;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
 </style>
 
 <script>
-// JavaScript translations
 var paycellTranslations = {
   fillRequiredFields: '{$js_translations.fillRequiredFields|escape:'javascript'}',
   tokenizationFailed: '{$js_translations.tokenizationFailed|escape:'javascript'}',
@@ -209,9 +590,38 @@ var paycellTranslations = {
   enterValidCVV: '{$js_translations.enterValidCVV|escape:'javascript'}',
   hashGenerationFailed: '{$js_translations.hashGenerationFailed|escape:'javascript'}',
   singlePayment: '{$js_translations.singlePayment|escape:'javascript'}',
-  installments: '{$js_translations.installments|escape:'javascript'}'
+  installments: '{$js_translations.installments|escape:'javascript'}',
+  savedCards: '{$js_translations.savedCards|escape:'javascript'}',
+  useSavedCard: '{$js_translations.useSavedCard|escape:'javascript'}',
+  useNewCard: '{$js_translations.useNewCard|escape:'javascript'}',
+  saveCard: '{$js_translations.saveCard|escape:'javascript'}',
+  otpRequired: '{$js_translations.otpRequired|escape:'javascript'}',
+  otpMessageFull: '{$js_translations.otpMessageFull|escape:'javascript'}',
+  sendOtp: '{$js_translations.sendOtp|escape:'javascript'}',
+  enterOtp: '{$js_translations.enterOtp|escape:'javascript'}',
+  otpPlaceholder: '{$js_translations.otpPlaceholder|escape:'javascript'}',
+  resendOtp: '{$js_translations.resendOtp|escape:'javascript'}',
+  verifyOtp: '{$js_translations.verifyOtp|escape:'javascript'}',
+  otpVerifiedSuccess: '{$js_translations.otpVerifiedSuccess|escape:'javascript'}',
+  sendingOtp: '{$js_translations.sendingOtp|escape:'javascript'}',
+  failedSendOtp: '{$js_translations.failedSendOtp|escape:'javascript'}',
+  verifyingOtp: '{$js_translations.verifyingOtp|escape:'javascript'}',
+  invalidOtp: '{$js_translations.invalidOtp|escape:'javascript'}',
+  failedValidateOtp: '{$js_translations.failedValidateOtp|escape:'javascript'}',
+  otpRequiredMessage: '{$js_translations.otpRequiredMessage|escape:'javascript'}',
+  processing: '{$js_translations.processing|escape:'javascript'}',
+  otpSentSuccess: '{$js_translations.otpSentSuccess|default:'OTP code has been sent to your phone number.'|escape:'javascript'}',
+  maxRetryAttemptsReached: '{$js_translations.maxRetryAttemptsReached|default:'Maximum retry attempts reached.'|escape:'javascript'}',
+  remainingAttempts: '{$js_translations.remainingAttempts|default:'Remaining attempts:'|escape:'javascript'}',
+  failedLoadCards: '{$js_translations.failedLoadCards|default:'Failed to load saved cards'|escape:'javascript'}',
+  networkError: '{$js_translations.networkError|default:'Network error:'|escape:'javascript'}',
+  otpVerifiedNoCards: '{$js_translations.otpVerifiedNoCards|default:'OTP verified but no cards received'|escape:'javascript'}'
 };
 
+var getCardsUrl = '{$get_cards_url|escape:'javascript'}';
+var savedCards = [];
+var selectedCardId = null;
+var cardTokenUrl = '{$card_token_url|escape:'javascript'}';
 
 document.addEventListener('DOMContentLoaded', function() {
   if (document.body.id !== 'checkout') {
@@ -227,23 +637,35 @@ document.addEventListener('DOMContentLoaded', function() {
   if (radioButtons.length === 1 && paymentFormInput) {
     $paymentForm.addEventListener("submit", handleSubmit);
     initialize();
-    showInstallmentOptionsDisabled(); // Show disabled installment options by default
+    showInstallmentOptionsDisabled();
     $placeOrderButton.addEventListener('click', handleClick);
+    {if $is_logged}
+    setupTabs();
+    loadSavedCards();
+    {/if}
   } else {
     radioButtons.forEach(function (input) {
       input.addEventListener("change", function() {
         if(input.dataset.moduleName === 'paycell_payment_gateway' && input.checked && $paymentForm) {
           $paymentForm.addEventListener("submit", handleSubmit);
           initialize();
-          showInstallmentOptionsDisabled(); // Show disabled installment options by default
+          showInstallmentOptionsDisabled();
           $placeOrderButton.addEventListener('click', handleClick);
+          {if $is_logged}
+          setupTabs();
+          loadSavedCards();
+          {/if}
         } else {
           $placeOrderButton.removeEventListener('click', handleClick);
         }
       });
       if(input.dataset.moduleName === 'paycell_payment_gateway' && input.checked && $paymentForm) {
-        showInstallmentOptionsDisabled(); // Show disabled installment options by default
+        showInstallmentOptionsDisabled();
         $placeOrderButton.addEventListener('click', handleClick);
+        {if $is_logged}
+        setupTabs();
+        loadSavedCards();
+        {/if}
       }
     })
   }
@@ -261,17 +683,30 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function generateTransactionId() {
-    const timestamp = Date.now().toString(); // 13 digits
-    const random = Math.floor(Math.random() * 1e7).toString().padStart(7, '0'); // 7 digits
-    const transactionId = timestamp + random; // 13 + 7 = 20 digits
+    const timestamp = Date.now().toString();
+    const array = new Uint32Array(1);
+    crypto.getRandomValues(array);
+    const random = (array[0] % 1e7).toString().padStart(7, '0');
+    const transactionId = timestamp + random;
     return transactionId;
 }
 
 function generateTransactionNumber() {
-    const numberTimestamp = Date.now().toString();
-    const numberRandom = Math.floor(Math.random() * 1e7).toString().padStart(7, '0');
-    const transactionNumber = numberTimestamp + numberRandom;
-    return transactionNumber;
+  const numberTimestamp = Date.now().toString();
+  const array = new Uint32Array(1);
+  crypto.getRandomValues(array);
+  const numberRandom = (array[0] % 1e7).toString().padStart(7, '0');
+  const transactionNumber = numberTimestamp + numberRandom;
+  return transactionNumber;
+}
+
+function generateReferenceNumber() {
+  const numberTimestamp = Date.now().toString();
+  const array = new Uint32Array(1);
+  crypto.getRandomValues(array);
+  const numberRandom = (array[0] % 1e7).toString().padStart(7, '0');
+  const referenceNumber = numberTimestamp + numberRandom;
+  return referenceNumber;
 }
 
 function generateTransactionTime() {
@@ -298,12 +733,10 @@ function handleClick(e) {
   $placeOrderButton.setAttribute("disabled", "disabled");
   $SpinnerWrapper.style.display = 'flex';
   
-  // Trigger form submission
   $paymentForm.dispatchEvent(new Event('submit'));
 }
 
 function initialize() {
-  // Format card number with spaces and BIN checking
   const cardNumber = document.getElementById('cardNumber');
   if (cardNumber) {
     let binCheckTimeout;
@@ -320,22 +753,18 @@ function initialize() {
         e.target.value = formattedValue;
       }
       
-      // Clear previous timeout
       clearTimeout(binCheckTimeout);
       
-      // Check BIN if we have at least 6 digits
       if (value.length >= 6) {
         binCheckTimeout = setTimeout(() => {
           checkBinInfo(value.substring(0, 6));
-        }, 500); // Wait 500ms after user stops typing
+        }, 500);
       } else {
-        // Show installment options as disabled
         showInstallmentOptionsDisabled();
       }
     });
   }
 
-  // Format expiry date
   const cardExpiry = document.getElementById('cardExpiry');
   if (cardExpiry) {
     cardExpiry.addEventListener('input', function(e) {
@@ -346,7 +775,6 @@ function initialize() {
       e.target.value = value;
     });
     
-    // Add validation on blur
     cardExpiry.addEventListener('blur', function(e) {
       const value = e.target.value;
       {literal}
@@ -359,7 +787,6 @@ function initialize() {
     });
   }
 
-  // Only allow numbers for CVV
   const cardCVC = document.getElementById('cardCVC');
   if (cardCVC) {
     cardCVC.addEventListener('input', function(e) {
@@ -373,13 +800,67 @@ async function handleSubmit(e) {
   e.stopPropagation();
   e.stopImmediatePropagation();
 
-  // Validate form
+  const activeTab = document.querySelector('.payment-option-tab.active');
+  const isUsingSavedCard = activeTab && activeTab.dataset.tab === 'saved-cards' && selectedCardId;
+  
+  if (isUsingSavedCard) {
+    const transactionId = generateTransactionId();
+    const transactionNumber = generateTransactionNumber();
+    const transactionTime = generateTransactionTime();
+    
+    document.getElementById('card_id').value = selectedCardId;
+    
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '{$action}';
+    
+    const cardIdInput = document.createElement('input');
+    cardIdInput.type = 'hidden';
+    cardIdInput.name = 'card_id';
+    cardIdInput.value = selectedCardId;
+    
+    const optionInput = document.createElement('input');
+    optionInput.type = 'hidden';
+    optionInput.name = 'option';
+    optionInput.value = 'embedded';
+
+    const transactionIdInput = document.createElement('input');
+    transactionIdInput.type = 'hidden';
+    transactionIdInput.name = 'transaction_id';
+    transactionIdInput.value = transactionId;
+
+    const transactionNumberInput = document.createElement('input');
+    transactionNumberInput.type = 'hidden';
+    transactionNumberInput.name = 'transaction_number';
+    transactionNumberInput.value = transactionNumber;
+
+    const transactionTimeInput = document.createElement('input');
+    transactionTimeInput.type = 'hidden';
+    transactionTimeInput.name = 'transaction_time';
+    transactionTimeInput.value = transactionTime;
+
+    const installmentCountInput = document.createElement('input');
+    installmentCountInput.type = 'hidden';
+    installmentCountInput.name = 'installmentCount';
+    const installmentSelect = document.getElementById('installmentCount');
+    installmentCountInput.value = (installmentSelect && !installmentSelect.disabled) ? installmentSelect.value : '1';
+    
+    form.appendChild(cardIdInput);
+    form.appendChild(optionInput);
+    form.appendChild(transactionIdInput);
+    form.appendChild(transactionNumberInput);
+    form.appendChild(transactionTimeInput);
+    form.appendChild(installmentCountInput);
+    document.body.appendChild(form);
+    form.submit();
+    return;
+  }
+
   if (!validateForm()) {
     handleError(paycellTranslations.fillRequiredFields);
     return;
   }
 
-  // Get card data
   const cardData = {
     holder: document.getElementById('cardHolder').value,
     number: document.getElementById('cardNumber').value.replace(/\s/g, ''),
@@ -391,14 +872,16 @@ async function handleSubmit(e) {
     const transactionId = generateTransactionId();
     const transactionNumber = generateTransactionNumber();
     const transactionTime = generateTransactionTime();
-    // Tokenize card using external API
     const token = await tokenizeCard(cardData, transactionId, transactionTime);
     
     if (token) {
-      // Set token and redirect to payment processing
       document.getElementById('card_token').value = token;
       
-      // Redirect to payment processing
+      const saveCardCheckbox = document.getElementById('saveCardCheckbox');
+      if (saveCardCheckbox && saveCardCheckbox.checked) {
+        document.getElementById('save_card').value = '1';
+      }
+      
       const form = document.createElement('form');
       form.method = 'POST';
       form.action = '{$action}';
@@ -434,12 +917,18 @@ async function handleSubmit(e) {
       const installmentSelect = document.getElementById('installmentCount');
       installmentCountInput.value = (installmentSelect && !installmentSelect.disabled) ? installmentSelect.value : '1';
       
+      const saveCardInput = document.createElement('input');
+      saveCardInput.type = 'hidden';
+      saveCardInput.name = 'save_card';
+      saveCardInput.value = (saveCardCheckbox && saveCardCheckbox.checked) ? '1' : '0';
+      
       form.appendChild(tokenInput);
       form.appendChild(optionInput);
       form.appendChild(transactionIdInput);
       form.appendChild(transactionNumberInput);
       form.appendChild(transactionTimeInput);
       form.appendChild(installmentCountInput);
+      form.appendChild(saveCardInput);
       document.body.appendChild(form);
       form.submit();
     } else {
@@ -472,11 +961,10 @@ function validateForm() {
     return false;
   }
   
-  // Validate expiry date is not in the past
   const [month, year] = expiry.split('/');
   const currentDate = new Date();
-  const currentYear = currentDate.getFullYear() % 100; // Get last 2 digits
-  const currentMonth = currentDate.getMonth() + 1; // getMonth() returns 0-11
+  const currentYear = currentDate.getFullYear() % 100;
+  const currentMonth = currentDate.getMonth() + 1;
   
   const expiryYear = parseInt(year);
   const expiryMonth = parseInt(month);
@@ -496,12 +984,12 @@ function validateForm() {
 
 async function tokenizeCard(cardData, transactionId, transactionTime) {
   try {
-    // First, get the hash from our server
     const hashResponse = await fetch('{$action}', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest'
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-TOKEN': window.prestashop.static_token
       },
       body: JSON.stringify({
         action: 'generate_hash',
@@ -516,8 +1004,8 @@ async function tokenizeCard(cardData, transactionId, transactionTime) {
       throw new Error(paycellTranslations.hashGenerationFailed);
     }
 
-    // Now make the tokenization request with the hash
-    const response = await fetch('https://omccstb.turkcell.com.tr/paymentmanagement/rest/getCardTokenSecure', {
+    const cardTokenUrl = '{$card_token_url}';
+    const response = await fetch(cardTokenUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -555,12 +1043,10 @@ function handleError(error) {
   let $SpinnerWrapper = document.getElementById('paycellSpinnerWrapper');
   $SpinnerWrapper.style.display = 'none';
   
-  // Show error message
   const messageContainer = document.querySelector('#error-message');
   if (messageContainer) {
     messageContainer.textContent = error;
   } else {
-    // Create error message element
     const errorDiv = document.createElement('div');
     errorDiv.id = 'error-message';
     errorDiv.className = 'error-message';
@@ -575,7 +1061,6 @@ function handleError(error) {
   }
 }
 
-// BIN Checking Functions
 async function checkBinInfo(binNumber) {
   try {
     const transactionId = generateTransactionId();
@@ -585,7 +1070,8 @@ async function checkBinInfo(binNumber) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest'
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-TOKEN': window.prestashop.static_token
       },
       body: JSON.stringify({
         transactionId: transactionId,
@@ -613,12 +1099,9 @@ async function checkBinInfo(binNumber) {
 function showInstallmentOptions() {
   const installmentGroup = document.getElementById('installment-group');
   const installmentSelect = document.getElementById('installmentCount');
-  
   if (installmentGroup && installmentSelect) {
-    // Clear existing options
     installmentSelect.innerHTML = '';
     
-    // Add installment options from 1 to 12
     for (let i = 1; i <= 12; i++) {
       const option = document.createElement('option');
       option.value = i;
@@ -630,7 +1113,6 @@ function showInstallmentOptions() {
       installmentSelect.appendChild(option);
     }
     
-    // Enable the select
     installmentSelect.disabled = false;
     installmentSelect.style.opacity = '1';
     installmentGroup.style.display = 'block';
@@ -642,17 +1124,14 @@ function showInstallmentOptionsDisabled() {
   const installmentSelect = document.getElementById('installmentCount');
   
   if (installmentGroup && installmentSelect) {
-    // Clear existing options
     installmentSelect.innerHTML = '';
     
-    // Add only single payment option
     const option = document.createElement('option');
     option.value = '1';
     option.textContent = paycellTranslations.singlePayment;
     option.selected = true;
     installmentSelect.appendChild(option);
     
-    // Disable the select
     installmentSelect.disabled = true;
     installmentSelect.style.opacity = '0.6';
     installmentGroup.style.display = 'block';
@@ -660,9 +1139,562 @@ function showInstallmentOptionsDisabled() {
 }
 
 function hideInstallmentOptions() {
-  const installmentGroup = document.getElementById('installment-group');
-  if (installmentGroup) {
-    installmentGroup.style.display = 'none';
+ showInstallmentOptionsDisabled();
+}
+
+async function loadSavedCards() {
+  const cardsLoading = document.getElementById('cards-loading');
+  const cardsError = document.getElementById('cards-error');
+  const savedCardsList = document.getElementById('saved-cards-list');
+  
+  if (cardsLoading) cardsLoading.style.display = 'block';
+  if (cardsError) cardsError.style.display = 'none';
+  if (savedCardsList) savedCardsList.style.display = 'none';
+  
+  try {
+    const transactionId = generateTransactionId();
+    const transactionDateTime = generateTransactionTime();
+    
+    const response = await fetch(getCardsUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-TOKEN': window.prestashop.static_token
+      },
+      body: JSON.stringify({
+        action: 'get',
+        transactionId: transactionId,
+        transactionDateTime: transactionDateTime
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (cardsLoading) cardsLoading.style.display = 'none';
+    
+    if (data.success && data.data && data.data.cards) {
+      savedCards = data.data.cards;
+      displaySavedCards();
+    } else if (data.requiresOTP || data.data?.requiresOTP) {
+      if (!otpReferenceNumber) {
+        otpReferenceNumber = generateReferenceNumber();
+      }
+      showOtpSection();
+    } else {
+      if (cardsError) {
+        cardsError.textContent = data.message || paycellTranslations.failedLoadCards || 'Failed to load saved cards';
+        cardsError.style.display = 'block';
+      }
+    }
+  } catch (error) {
+    if (cardsLoading) cardsLoading.style.display = 'none';
+    if (cardsError) {
+      cardsError.textContent = (paycellTranslations.networkError || 'Network error:') + ' ' + error.message;
+      cardsError.style.display = 'block';
+    }
+    console.error('Error loading saved cards:', error);
   }
 }
+
+function displaySavedCards() {
+  const cardsContainer = document.getElementById('cards-container');
+  const savedCardsList = document.getElementById('saved-cards-list');
+  const paymentOptionTabs = document.getElementById('payment-option-tabs');
+  const cardsLoading = document.getElementById('cards-loading');
+  const cardsError = document.getElementById('cards-error');
+  
+  if (!cardsContainer || !savedCardsList) {
+    return;
+  }
+  
+  cardsLoading.style.display = 'none';
+  cardsError.style.display = 'none';
+  cardsContainer.innerHTML = '';
+  
+  if (savedCards.length === 0) {
+    if (paymentOptionTabs) {
+      paymentOptionTabs.style.display = 'none';
+    }
+    document.querySelectorAll('.payment-option-content').forEach(function(content) {
+      content.classList.remove('active');
+    });
+    const newCardContent = document.getElementById('new-card-content');
+    if (newCardContent) {
+      newCardContent.classList.add('active');
+    }
+    return;
+  }
+  
+  if (paymentOptionTabs) {
+    paymentOptionTabs.style.display = 'flex';
+  }
+  
+  savedCards.forEach(function(card, index) {
+    const cardId = card.cardId || card.id || index;
+    const cardNumber = card.maskedCardNumber || card.maskedCardNo || card.maskedCard || card.cardNumber || '•••• •••• •••• ••••';
+    const cardBrand = card.cardBrand || 'Credit Card';
+    const cardType = card.cardType || 'Card';
+    const cardTypeNormalized = String(cardType).toLowerCase();
+    const isCreditCard = cardTypeNormalized === 'credit';
+    const isDefault = card.isDefault || false;
+    const isSelected = (selectedCardId == cardId) || (isDefault && index === 0);
+    
+    if (isSelected && !selectedCardId) {
+      selectedCardId = cardId;
+    }
+    
+    const cardDiv = document.createElement('div');
+    cardDiv.className = 'saved-card-item' + (isSelected ? ' selected' : '');
+    cardDiv.dataset.cardId = String(cardId);
+    if (isDefault) {
+      cardDiv.dataset.default = 'true';
+    }
+    cardDiv.dataset.cardType = cardType;
+    cardDiv.dataset.isCreditCard = isCreditCard ? '1' : '0';
+    
+    cardDiv.innerHTML = 
+      (isSelected ? '<div class="card-checkmark">✓</div>' : '') +
+      '<div class="card-header">' +
+        '<div class="card-brand">' + cardBrand + '</div>' +
+        '<div class="card-type">' + cardType + '</div>' +
+      '</div>' +
+      '<div class="card-number">' + cardNumber + '</div>';
+    
+    cardDiv.addEventListener('click', function() {
+      handleCardSelection(cardId);
+    });
+    
+    cardsContainer.appendChild(cardDiv);
+  });
+  
+  savedCardsList.style.display = 'block';
+  
+  const defaultCard = document.querySelector('.saved-card-item[data-default="true"]');
+  if (defaultCard) {
+    defaultCard.click();
+  } else if (cardsContainer.children.length > 0) {
+    cardsContainer.children[0].click();
+  }
+}
+
+function setupTabs() {
+  const tabs = document.querySelectorAll('.payment-option-tab');
+  
+  tabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      const tabName = this.dataset.tab;
+      
+      tabs.forEach(function(t) {
+        t.classList.remove('active');
+      });
+      this.classList.add('active');
+      
+      document.querySelectorAll('.payment-option-content').forEach(function(content) {
+        content.classList.remove('active');
+        content.style.display = 'none';
+      });
+      
+      const targetContent = document.getElementById(tabName + '-content');
+      if (targetContent) {
+        targetContent.classList.add('active');
+        targetContent.style.display = 'block';
+      }
+
+      if (tabName === 'new-card') {
+        selectedCardId = null;
+        document.getElementById('card_id').value = '';
+        document.querySelectorAll('.saved-card-item').forEach(function(item) {
+          item.classList.remove('selected');
+          const checkmark = item.querySelector('.card-checkmark');
+          if (checkmark) {
+            checkmark.remove();
+          }
+        });
+        hideInstallmentOptions();
+      }
+      
+      if (tabName === 'saved-cards') {
+        const savedCardsList = document.getElementById('saved-cards-list');
+        if (savedCardsList && savedCards.length > 0) {
+          savedCardsList.style.display = 'block';
+        }
+        const selectedItem = document.querySelector('.saved-card-item.selected');
+        if (selectedItem) {
+          const isCredit = selectedItem.dataset.isCreditCard === '1';
+          if (isCredit) {
+            showInstallmentOptions();
+          } else {
+            showInstallmentOptionsDisabled();
+          }
+        } else {
+          hideInstallmentOptions();
+        }
+      }
+    });
+  });
+}
+
+function handleCardSelection(cardId) {
+  document.querySelectorAll('.saved-card-item').forEach(function(item) {
+    item.classList.remove('selected');
+    const checkmark = item.querySelector('.card-checkmark');
+    if (checkmark) {
+      checkmark.remove();
+    }
+  });
+  
+  const selectedItem = document.querySelector('.saved-card-item[data-card-id="' + cardId + '"]');
+  if (selectedItem) {
+    selectedItem.classList.add('selected');
+    selectedItem.insertAdjacentHTML('afterbegin', '<div class="card-checkmark">✓</div>');
+
+    const isCredit = selectedItem.dataset.isCreditCard === '1';
+    if (isCredit) {
+      showInstallmentOptions();
+    } else {
+      showInstallmentOptionsDisabled();
+    }
+  }
+  
+  selectedCardId = cardId;
+  document.getElementById('card_id').value = cardId;
+  
+  const savedCardsTab = document.querySelector('.payment-option-tab[data-tab="saved-cards"]');
+  if (savedCardsTab && !savedCardsTab.classList.contains('active')) {
+    savedCardsTab.click();
+  }
+}
+
+var otpReferenceNumber = null;
+var otpToken = null;
+var otpSectionExpanded = false;
+var otpRemainingRetryCount = null;
+
+function showOtpSection() {
+  const otpSection = document.getElementById('otp-section');
+  if (otpSection) {
+    otpSection.style.display = 'block';
+    otpSection.classList.add('active');
+  }
+}
+
+function toggleOtpSection() {
+  const expandedContent = document.getElementById('otp-expanded-content');
+  const toggleIcon = document.getElementById('otp-toggle-icon');
+  
+  if (expandedContent) {
+    if (otpSectionExpanded) {
+      expandedContent.style.display = 'none';
+      expandedContent.classList.remove('active');
+      if (toggleIcon) toggleIcon.style.transform = 'rotate(0deg)';
+      otpSectionExpanded = false;
+    } else {
+      expandedContent.style.display = 'block';
+      expandedContent.classList.add('active');
+      if (toggleIcon) toggleIcon.style.transform = 'rotate(180deg)';
+      otpSectionExpanded = true;
+    }
+  }
+}
+
+function hideOtpSection() {
+  const otpSection = document.getElementById('otp-section');
+  if (otpSection) {
+    otpSection.style.display = 'none';
+    otpSection.classList.remove('active');
+    resetOtpForm();
+  }
+}
+
+function resetOtpForm() {
+  const otpCodeInput = document.getElementById('otp-code');
+  const otpMessage = document.getElementById('otp-message');
+  const otpSendSection = document.getElementById('otp-send-section');
+  const otpVerifySection = document.getElementById('otp-verify-section');
+  const otpSuccessMessage = document.getElementById('otp-success-message');
+  
+  if (otpCodeInput) otpCodeInput.value = '';
+  if (otpMessage) {
+    otpMessage.textContent = '';
+    otpMessage.className = 'otp-message';
+  }
+  if (otpSendSection) otpSendSection.style.display = 'block';
+  if (otpVerifySection) {
+    otpVerifySection.style.display = 'none';
+    otpVerifySection.classList.remove('active');
+  }
+  if (otpSuccessMessage) {
+    otpSuccessMessage.style.display = 'none';
+    otpSuccessMessage.classList.remove('active');
+  }
+  const otpResendBtn = document.getElementById('btn-resend-otp');
+  if (otpResendBtn) otpResendBtn.style.display = 'none';
+  otpSectionExpanded = false;
+  otpToken = null;
+  otpReferenceNumber = null;
+  otpRemainingRetryCount = null;
+}
+
+async function sendOtp() {
+  const otpLoading = document.getElementById('otp-loading');
+  const otpMessage = document.getElementById('otp-message');
+  const otpSendBtn = document.getElementById('btn-send-otp');
+  const otpSendSection = document.getElementById('otp-send-section');
+  const otpVerifySection = document.getElementById('otp-verify-section');
+  
+  if (!otpReferenceNumber) {
+    otpReferenceNumber = generateReferenceNumber();
+  }
+  
+  if (otpLoading) otpLoading.style.display = 'flex';
+  if (otpMessage) {
+    otpMessage.textContent = '';
+    otpMessage.className = 'otp-message';
+  }
+  if (otpSendBtn) otpSendBtn.disabled = true;
+  
+  try {
+    const transactionId = generateTransactionId();
+    const transactionDateTime = generateTransactionTime();
+    
+    const response = await fetch(getCardsUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-TOKEN': window.prestashop.static_token
+      },
+      body: JSON.stringify({
+        action: 'send_otp',
+        transactionId: transactionId,
+        transactionDateTime: transactionDateTime,
+        referenceNumber: otpReferenceNumber
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (otpLoading) otpLoading.style.display = 'none';
+    
+    if (data.success) {
+      if (data.data && data.data.otpToken) {
+        otpToken = data.data.otpToken;
+      } else if (data.otpToken) {
+        otpToken = data.otpToken;
+      }
+      if (data.data) {
+        if (data.data.remainingRetryCount !== undefined) otpRemainingRetryCount = data.data.remainingRetryCount;
+      } else if (data.remainingRetryCount !== undefined) {
+        otpRemainingRetryCount = data.remainingRetryCount;
+      }
+      if (otpSendSection) otpSendSection.style.display = 'none';
+      if (otpVerifySection) {
+        otpVerifySection.style.display = 'block';
+        otpVerifySection.classList.add('active');
+      }
+      const otpResendBtn = document.getElementById('btn-resend-otp');
+      if (otpResendBtn) otpResendBtn.style.display = 'none';
+      const otpVerifyBtn = document.getElementById('btn-verify-otp');
+      const otpCodeInput = document.getElementById('otp-code');
+      if (otpVerifyBtn) otpVerifyBtn.disabled = false;
+      if (otpCodeInput) {
+        otpCodeInput.disabled = false;
+        otpCodeInput.value = '';
+      }
+      if (otpMessage) {
+        otpMessage.textContent = paycellTranslations.otpSentSuccess || 'OTP code has been sent to your phone number.';
+        otpMessage.className = 'otp-message success';
+      }
+    } else {
+      if (data.data) {
+        if (data.data.remainingRetryCount !== undefined) otpRemainingRetryCount = data.data.remainingRetryCount;
+      } else if (data.remainingRetryCount !== undefined) {
+        otpRemainingRetryCount = data.remainingRetryCount;
+      }
+      if (otpMessage) {
+        let errorMsg = data.message || paycellTranslations.failedSendOtp || 'Failed to send OTP. Please try again.';
+        if (otpRemainingRetryCount !== null && otpRemainingRetryCount <= 0) {
+          errorMsg += ' ' + (paycellTranslations.maxRetryAttemptsReached || 'Maximum retry attempts reached.');
+        }
+        otpMessage.textContent = errorMsg;
+        otpMessage.className = 'otp-message error';
+      }
+      if (otpSendBtn) {
+        if (otpRemainingRetryCount !== null && otpRemainingRetryCount <= 0) {
+          otpSendBtn.disabled = true;
+        } else {
+          otpSendBtn.disabled = false;
+        }
+      }
+    }
+  } catch (error) {
+    if (otpLoading) otpLoading.style.display = 'none';
+    if (otpMessage) {
+      otpMessage.textContent = (paycellTranslations.networkError || 'Network error:') + ' ' + error.message;
+      otpMessage.className = 'otp-message error';
+    }
+    if (otpSendBtn) otpSendBtn.disabled = false;
+    console.error('Error sending OTP:', error);
+  }
+}
+
+async function verifyOtp() {
+  const otpCodeInput = document.getElementById('otp-code');
+  const otpLoading = document.getElementById('otp-loading');
+  const otpMessage = document.getElementById('otp-message');
+  const otpVerifyBtn = document.getElementById('btn-verify-otp');
+  const otpResendBtn = document.getElementById('btn-resend-otp');
+  const otpVerifySection = document.getElementById('otp-verify-section');
+  const otpSuccessMessage = document.getElementById('otp-success-message');
+  
+  if (!otpCodeInput || !otpCodeInput.value || otpCodeInput.value.length < 4) {
+    if (otpMessage) {
+      otpMessage.textContent = paycellTranslations.otpRequiredMessage || 'Please enter a valid OTP code';
+      otpMessage.className = 'otp-message error';
+    }
+    return;
+  }
+  
+  if (otpLoading) otpLoading.style.display = 'flex';
+  if (otpMessage) {
+    otpMessage.textContent = '';
+    otpMessage.className = 'otp-message';
+  }
+  if (otpVerifyBtn) otpVerifyBtn.disabled = true;
+  if (otpResendBtn) otpResendBtn.disabled = true;
+  
+  try {
+    const transactionId = generateTransactionId();
+    const transactionDateTime = generateTransactionTime();
+    
+    const response = await fetch(getCardsUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-TOKEN': window.prestashop.static_token
+      },
+      body: JSON.stringify({
+        action: 'verify_otp',
+        transactionId: transactionId,
+        transactionDateTime: transactionDateTime,
+        otpCode: otpCodeInput.value,
+        referenceNumber: otpReferenceNumber,
+        otpToken: otpToken
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (otpLoading) otpLoading.style.display = 'none';
+    
+    if (data.success) {
+      if (data.data && data.data.cards) {
+        savedCards = data.data.cards;
+        if (otpVerifySection) {
+          otpVerifySection.style.display = 'none';
+          otpVerifySection.classList.remove('active');
+        }
+        if (otpSuccessMessage) {
+          otpSuccessMessage.style.display = 'block';
+          otpSuccessMessage.classList.add('active');
+        }
+        setTimeout(function() {
+          hideOtpSection();
+          displaySavedCards();
+        }, 200);
+      } else {
+        if (otpMessage) {
+          otpMessage.textContent = paycellTranslations.otpVerifiedNoCards || 'OTP verified but no cards received';
+          otpMessage.className = 'otp-message error';
+        }
+        if (otpVerifyBtn) otpVerifyBtn.disabled = false;
+        if (otpResendBtn) otpResendBtn.disabled = false;
+      }
+    } else {
+      if (data.data) {
+        if (data.data.remainingRetryCount !== undefined) otpRemainingRetryCount = data.data.remainingRetryCount;
+      } else if (data.remainingRetryCount !== undefined) {
+        otpRemainingRetryCount = data.remainingRetryCount;
+      }
+      
+      if (otpMessage) {
+        let errorMsg = data.message || paycellTranslations.invalidOtp || 'Invalid OTP code. Please try again.';
+        if (otpRemainingRetryCount !== null) {
+          if (otpRemainingRetryCount > 0) {
+            errorMsg += ' ' + (paycellTranslations.remainingAttempts || 'Remaining attempts:') + ' ' + otpRemainingRetryCount;
+            otpMessage.className = 'otp-message warning';
+          } else {
+            errorMsg += ' ' + (paycellTranslations.maxRetryAttemptsReached || 'Maximum retry attempts reached.');
+            otpMessage.className = 'otp-message error';
+          }
+        } else {
+          otpMessage.className = 'otp-message error';
+        }
+        otpMessage.textContent = errorMsg;
+      }
+      
+      if (otpRemainingRetryCount !== null && otpRemainingRetryCount <= 0) {
+        if (otpResendBtn) {
+          otpResendBtn.style.display = 'block';
+          otpResendBtn.disabled = false;
+        }
+        if (otpVerifyBtn) otpVerifyBtn.disabled = true;
+        if (otpCodeInput) otpCodeInput.disabled = true;
+      } else {
+        if (otpResendBtn) otpResendBtn.style.display = 'none';
+        if (otpVerifyBtn) otpVerifyBtn.disabled = false;
+        if (otpCodeInput) otpCodeInput.value = '';
+      }
+    }
+  } catch (error) {
+    if (otpLoading) otpLoading.style.display = 'none';
+    if (otpMessage) {
+      otpMessage.textContent = (paycellTranslations.networkError || 'Network error:') + ' ' + error.message;
+      otpMessage.className = 'otp-message error';
+    }
+    if (otpVerifyBtn) otpVerifyBtn.disabled = false;
+    if (otpResendBtn) otpResendBtn.disabled = false;
+    console.error('Error verifying OTP:', error);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const otpToggleBtn = document.getElementById('btn-toggle-otp');
+  const otpSendBtn = document.getElementById('btn-send-otp');
+  const otpVerifyBtn = document.getElementById('btn-verify-otp');
+  const otpResendBtn = document.getElementById('btn-resend-otp');
+  const otpCodeInput = document.getElementById('otp-code');
+  
+  if (otpToggleBtn) {
+    otpToggleBtn.addEventListener('click', toggleOtpSection);
+  }
+  
+  if (otpSendBtn) {
+    otpSendBtn.addEventListener('click', sendOtp);
+  }
+  
+  if (otpVerifyBtn) {
+    otpVerifyBtn.addEventListener('click', verifyOtp);
+  }
+  
+  if (otpResendBtn) {
+    otpResendBtn.addEventListener('click', function() {
+      sendOtp();
+    });
+  }
+  
+  if (otpCodeInput) {
+    otpCodeInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        verifyOtp();
+      }
+    });
+    
+    otpCodeInput.addEventListener('input', function(e) {
+      e.target.value = e.target.value.replace(/\D/g, '');
+    });
+  }
+});
 </script>
