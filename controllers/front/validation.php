@@ -170,7 +170,7 @@ class Paycell_Payment_GatewayValidationModuleFrontController extends ModuleFront
             'success' => $success,
             'message' => Tools::safeOutput((string) $message),
             'data' => $data
-        ]);
+        ], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
         exit;
     }
 }
